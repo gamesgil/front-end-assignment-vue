@@ -7,16 +7,30 @@
             <button type="submit">Search</button>
         </div>
 
-        <p>Filter by:</p>
-        <div class="filters">
-            <Tag :active=active :title=title v-for="{ title, active } in tags" v-bind:key="title"></Tag>
+        <template>
+            <p>Filter by:</p>
+            <div class="filters">
+                <Tag :active=active :title=title v-for="{ title, active } in tags" v-bind:key="title"></Tag>
+            </div>
+        </template>
+
+        <template>
+            <div>
+            <Month title="October"></Month>
+            <div class="separator"></div>
+            <Activity title="aaa"></Activity>
+            <div class="separator"></div>
+            <Activity title="aaa"></Activity>
         </div>
+        </template>
     </div>
 </template>
 
 <script>
 
 import Tag from '@/components/Tag.vue';
+import Month from '@/components/Month.vue';
+import Activity from '@/components/Activity.vue';
 
 export default {
     name: 'Activities',
@@ -24,7 +38,9 @@ export default {
         msg: String,
     },
     components: {
-        Tag
+        Tag,
+        Month,
+        Activity
     },
     data() {
         return {
@@ -46,6 +62,8 @@ div.container {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    gap: 1rem;
+    width: 50%;
 }
 
 div.filters {
@@ -80,5 +98,12 @@ button[type="submit"] {
 
 button[type="submit"]:hover {
     opacity: 1;
+}
+
+div.separator {
+    border-left: 2px solid lightgray;
+    height: 10px;
+    left: 30px;
+    position: relative;
 }
 </style>

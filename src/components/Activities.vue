@@ -16,21 +16,25 @@
 
         <template>
             <div>
-            <Month title="October"></Month>
-            <div class="separator"></div>
-            <Activity title="aaa"></Activity>
-            <div class="separator"></div>
-            <Activity title="aaa"></Activity>
-        </div>
+                <ActivityList isFirst></ActivityList>
+                <ActivityList></ActivityList>
+                <ActivityList></ActivityList>
+            </div>
+            <div class="row">
+                <img src="../assets/more.svg" width="16">
+                <span><strong>Load more</strong></span>
+            </div>
         </template>
+
+        <Modal></Modal>
     </div>
 </template>
 
 <script>
 
 import Tag from '@/components/Tag.vue';
-import Month from '@/components/Month.vue';
-import Activity from '@/components/Activity.vue';
+import ActivityList from '@/components/ActivityList.vue';
+import Modal from '@/components/Modal.vue';
 
 export default {
     name: 'Activities',
@@ -39,8 +43,8 @@ export default {
     },
     components: {
         Tag,
-        Month,
-        Activity
+        ActivityList,
+        Modal
     },
     data() {
         return {
@@ -100,10 +104,11 @@ button[type="submit"]:hover {
     opacity: 1;
 }
 
-div.separator {
-    border-left: 2px solid lightgray;
-    height: 10px;
-    left: 30px;
-    position: relative;
+div.row {
+    display: flex;
+}
+
+div.modal {
+    
 }
 </style>

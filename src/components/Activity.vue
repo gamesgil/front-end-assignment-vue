@@ -1,5 +1,5 @@
 <template>
-    <div class="activity">
+    <div class="activity" :class="{ 'has-zoom': hasZoom }" @click="$emit('showActivity', data)">
         <div class="container">
             <div>
                 <img class="icon" src="../assets/topics/adalovelace.png" width="32">
@@ -23,7 +23,24 @@ export default {
     name: 'Activity',
     props: {
         title: String,
-    }
+        hasZoom: Boolean
+    },
+    data() {
+        return {
+            data: {
+                title: 'Gil',
+                date: '12345678',
+                comment: 'ok',
+                score: 1,
+                maxScore: 10
+            }
+        }
+    },
+    methods: {
+        log(a) {
+            console.log(a)
+        }
+        }
 }
 </script>
 
@@ -31,6 +48,10 @@ export default {
 div.activity {
     border: 1px solid lightgray;
     width: 100%;
+}
+
+div.has-zoom {
+    cursor: pointer;
 }
 
 div.container {
@@ -70,7 +91,8 @@ div.jr {
     left: 20px;
     top: -10px;
     border-radius: 50%;
-    background-color: rgb(246, 183, 13);;
+    background-color: rgb(246, 183, 13);
+    ;
     font-size: 0.75rem;
 }
 </style>

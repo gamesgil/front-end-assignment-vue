@@ -12,6 +12,7 @@ div.tag {
     padding: 0.25rem 0.5rem;
     font-size: 0.75rem;
     color: rgb(0, 128, 129);
+    cursor: pointer;
 }
 
 div.tag.active {

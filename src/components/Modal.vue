@@ -1,20 +1,26 @@
 <template>
     <div class="modal">
-        <button class="close">
+        <button class="close" @click="$emit('close')">
             <img src="../assets/close.svg" alt="">
         </button>
         <img src="../assets/topics/adalovelace.png" width="64">
-        <h2>Title</h2>
-        <p>Date</p>
-        <p class="left comment"><strong>Great job!</strong></p>
-        <p class="left score">Score: <strong>3/10</strong></p>
+        <h2>{{ title }}</h2>
+        <p>{{ time }}</p>
+        <p class="left comment"><strong>{{ comment }}</strong></p>
+        <p class="left score">Score: <strong>{{score}}/{{maxScore}}</strong></p>
     </div>
 </template>
 
 <script>
 export default {
     name: 'Modal',
-    props: {}
+    props: {
+        title: String,
+        time: Number,
+        comment: String,
+        score: Number,
+        maxScore: Number
+    }
 }
 </script>
 
@@ -37,7 +43,7 @@ export default {
 button.close {
     border: none;
     background: white;
-
+    cursor: pointer;
 }
 
 button>img {

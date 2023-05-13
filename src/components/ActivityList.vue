@@ -3,7 +3,7 @@
         <div v-if=!isFirst class="separator"></div>
         <Month title="October"></Month>
         <div class="separator"></div>
-        <Activity title="aaa"></Activity>
+        <Activity title="aaa" hasZoom @showActivity="(data) => $emit('showActivity', data)"></Activity>
         <div class="separator"></div>
         <Activity title="aaa"></Activity>
     </div>

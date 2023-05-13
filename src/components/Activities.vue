@@ -1,12 +1,8 @@
 <template>
     <div class="container">
-        <h1>Timeline</h1>
-        <div class="input">
-            <label for="activity"></label>
-            <input type="text" name="activity" placeholder="Search Timeline" />
-            <button type="submit">Search</button>
-        </div>
 
+        <h1>Timeline</h1>
+        <Search></Search>
         <template>
             <p>Filter by:</p>
             <div class="filters">
@@ -16,7 +12,7 @@
 
         <template>
             <div>
-                <ActivityList isFirst></ActivityList>
+                <ActivityList isFirst @showActivity="(data) => showModal(data)"></ActivityList>
                 <ActivityList></ActivityList>
                 <ActivityList></ActivityList>
             </div>
@@ -26,7 +22,9 @@
             </div>
         </template>
 
-        <Modal></Modal>
+        <Modal v-if=selectedActivity @close="selectedActivity = null" :title="selectedActivity.title"
+            :data="selectedActivity.date" :comment="selectedActivity.comment" :score="selectedActivity.score"
+            :maxScore="selectedActivity.maxScore"></Modal>
     </div>
 </template>
 
@@ -35,6 +33,7 @@
 import Tag from '@/components/Tag.vue';
 import ActivityList from '@/components/ActivityList.vue';
 import Modal from '@/components/Modal.vue';
+import Search from '@/components/Search.vue';
 
 export default {
     name: 'Activities',
@@ -42,6 +41,7 @@ export default {
         msg: String,
     },
     components: {
+        Search,
         Tag,
         ActivityList,
         Modal
@@ -55,7 +55,22 @@ export default {
             {
                 title: 'two',
                 active: true
-            }]
+            }],
+            selectedActivity: null
+        }
+    },
+    mounted() {
+        this.getData()
+    },
+    methods: {
+        showModal(data) {
+            this.isModal = true;
+            console.log(data)
+            this.selectedActivity = data;
+        },
+        async getData() {
+            const response = await fetch("http://localhost:3000/activities/v1");
+            console.log(await response.json());
         }
     }
 };
@@ -76,39 +91,7 @@ div.filters {
     gap: 1rem;
 }
 
-div.input {
-    width: 181px;
-    border: 1px solid darkgray;
-}
-
-input {
-    height: 30px;
-    border: none;
-}
-
-button[type="submit"] {
-    text-indent: -999px;
-    overflow: hidden;
-    width: 30px;
-    height: 30px;
-    padding: 0;
-    margin: 0;
-    border: 1px solid transparent;
-    border-radius: inherit;
-    background: darkgreen url(../assets/search.svg) no-repeat center;
-    cursor: pointer;
-    opacity: 0.7;
-}
-
-button[type="submit"]:hover {
-    opacity: 1;
-}
-
 div.row {
     display: flex;
-}
-
-div.modal {
-    
 }
 </style>

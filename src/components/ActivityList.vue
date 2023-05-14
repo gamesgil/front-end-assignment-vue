@@ -1,11 +1,15 @@
 <template>
     <div>
         <div v-if=!isFirst class="separator"></div>
-        <Month title="October"></Month>
-        <div class="separator"></div>
-        <Activity title="aaa" hasZoom @showActivity="(data) => $emit('showActivity', data)"></Activity>
-        <div class="separator"></div>
-        <Activity title="aaa"></Activity>
+        <Month :title=month></Month>
+        <div v-for="(activity, index) in activities" v-bind:key="index">
+
+            <div class="separator"></div>
+            <Activity title="aaa" hasZoom
+                :activity="activity"
+                @showActivity="(data) => $emit('showActivity', data)">
+            </Activity>
+        </div>
     </div>
 </template>
 
@@ -18,9 +22,14 @@ import Activity from '@/components/Activity.vue';
 export default {
     name: 'ActivityList',
     props: {
-        isFirst: Boolean
+        isFirst: Boolean,
+        month: String,
+        activities: Array
     },
-    components: {Month, Activity}
+    components: { Month, Activity },
+    methods: {
+
+    }
 }
 
 </script>

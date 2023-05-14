@@ -1,16 +1,16 @@
 <template>
-    <div class="activity" :class="{ 'has-zoom': hasZoom }" @click="$emit('showActivity', data)">
+    <div class="activity" :class="{ 'has-zoom': hasZoom }">
         <div class="container">
             <div>
                 <img class="icon" src="../assets/topics/adalovelace.png" width="32">
                 <div class="jr">Jr.</div>
             </div>
             <div class="info">
-                <p>title</p>
-                <p>subtitle</p>
+                <p>{{ activity.topic_data.name }}</p>
+                <p>{{ getFormattedDateTime(activity.d_created) }}</p>
             </div>
-            <span>Score: <strong>3/10</strong></span>
-            <div class="view-work">
+            <span v-if="activity.score">Score: <strong>{{ activity.score }}/{{ activity.possible_score }}</strong></span>
+            <div class="view-work" v-if="isZoom()"  @click="$emit('showActivity', activity)">
                 <img src="../assets/eye.svg" width="16">
                 <span><strong>View work</strong></span>
             </div>
@@ -19,11 +19,14 @@
 </template>
 
 <script>
+import {getFormattedDateTime} from '../util/date.util';
+
 export default {
     name: 'Activity',
     props: {
         title: String,
-        hasZoom: Boolean
+        hasZoom: Boolean,
+        activity: Object
     },
     data() {
         return {
@@ -37,10 +40,15 @@ export default {
         }
     },
     methods: {
-        log(a) {
-            console.log(a)
+        isZoom() {
+            const defs = ['quiz', 'easy_quiz', 'challenge', 'make_a_map', 'make_a_movie', 'wordplay', 'related_reading', 'draw_about_it']
+
+            return defs.includes(this.activity.resource_type);
+        },
+        getFormattedDateTime(time) {
+            return getFormattedDateTime(time);
         }
-        }
+    }
 }
 </script>
 
@@ -51,7 +59,6 @@ div.activity {
 }
 
 div.has-zoom {
-    cursor: pointer;
 }
 
 div.container {
@@ -78,6 +85,11 @@ div.container img.icon {
     background: rgb(246, 183, 13);
     border-radius: 50%;
     padding: 0.25rem;
+}
+
+div.view-work {
+    cursor: pointer;
+
 }
 
 div.view-work>img {

@@ -5,21 +5,28 @@
         </button>
         <img src="../assets/topics/adalovelace.png" width="64">
         <h2>{{ title }}</h2>
-        <p>{{ time }}</p>
+        <p>{{ getFormattedDateTime(time) }}</p>
         <p class="left comment"><strong>{{ comment }}</strong></p>
         <p class="left score">Score: <strong>{{score}}/{{maxScore}}</strong></p>
     </div>
 </template>
 
 <script>
+import {getFormattedDateTime} from '../util/date.util';
+
 export default {
     name: 'Modal',
     props: {
         title: String,
-        time: Number,
+        time: String,
         comment: String,
-        score: Number,
-        maxScore: Number
+        score: String,
+        maxScore: String
+    },
+    methods: {
+        getFormattedDateTime(time) {
+            return getFormattedDateTime(time);
+        }
     }
 }
 </script>

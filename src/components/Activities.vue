@@ -4,18 +4,19 @@
         <Search></Search>
         <template>
             <p>Filter by:</p>
-            <div class="filters">
-                <Tag :active=active :title=title v-for="{ title, active } in tags" v-bind:key="title"></Tag>
+            <div class="tags">
+                <Tag :active="selectedTags.length===tags.length" title="All Work" @selectTag="selectAll()"></Tag>
+                <Tag :active=isTagSelected(title) :title=title v-for="{ title } in tags" v-bind:key="title"
+                    @selectTag="(title) => selectTag(title)"></Tag>
             </div>
         </template>
 
         <template>
             <p>{{ showActivities.length }}</p>
             <div class="activities" v-for="(activities, index) in showActivities" v-bind:key="index">
-                <ActivityList v-if="activities.length" 
-                :isFirst="index===0" :month=getMonth(activities[0]) :activities="activities"
-                @showActivity="(data) => showModal(data)">
-            </ActivityList>
+                <ActivityList v-if="activities.length" :isFirst="index === 0" :month=getMonth(activities[0])
+                    :activities="activities" @showActivity="(data) => showModal(data)">
+                </ActivityList>
             </div>
             <div class="row" v-if="isMore" @click="loadMore()">
                 <img src="../assets/more.svg" width="16">
@@ -25,7 +26,8 @@
 
         <Modal v-if=selectedActivity @close="selectedActivity = null" :title="selectedActivity.topic_data.name"
             :time="selectedActivity.d_created" :comment="selectedActivity.comment" :score="selectedActivity.score"
-            :maxScore="selectedActivity.possible_score" :product="selectedActivity.product" :icon=getIcon(selectedActivity.topic_data.icon_path)>
+            :maxScore="selectedActivity.possible_score" :product="selectedActivity.product"
+            :icon=getIcon(selectedActivity.topic_data.icon_path)>
         </Modal>
     </div>
 </template>
@@ -38,7 +40,7 @@ import Modal from '@/components/Modal.vue';
 import Search from '@/components/Search.vue';
 import { fetchData } from '../util/parse.util';
 import { getMonth } from '../util/date.util';
-import {getIconUrl} from '../util/file.util';
+import { getIconUrl } from '../util/file.util';
 
 export default {
     name: 'Activities',
@@ -53,26 +55,75 @@ export default {
     },
     data() {
         return {
-            tags: [{
-                title: 'one',
-                active: false
-            },
-            {
-                title: 'two',
-                active: true
-            }],
+            tags: [
+                {
+                    title: 'Movie',
+                    resourceType: 'movie'
+                },
+                {
+                    title: 'Quiz',
+                    resourceType: 'quiz'
+                },
+                {
+                    title: 'Easy Quiz',
+                    resourceType: 'easy_quiz'
+                },
+                {
+                    title: 'Challenge',
+                    resourceType: 'challenge'
+                },
+                {
+                    title: 'Make a Map',
+                    resourceType: 'make_a_map'
+                },
+                {
+                    title: 'Make a Movie',
+                    resourceType: 'make_a_movie'
+                },
+                {
+                    title: 'Wordplay',
+                    resourceType: 'wordplay'
+                },
+                {
+                    title: 'Related reading',
+                    resourceType: 'related_reading'
+                },
+                {
+                    title: 'Draw about it',
+                    resourceType: 'draw_about_it'
+                }
+            ],
             selectedActivity: null,
             activities: [],
             showActivities: [],
             curPage: 0,
             pageSize: 10,
-            isMore: true
+            isMore: true,
+            selectedTags: [],
+            filter: ''
         }
     },
     mounted() {
         this.getData()
     },
     methods: {
+        isTagSelected(title) {
+            console.log(title)
+                console.log(this.selectedTags.includes(title))
+            return this.selectedTags.includes(title)
+        },
+        selectAll() {
+            this.selectedTags = [...this.tags.map(tag => tag.title)];
+        },
+        selectTag(tagName) {
+            const idx = this.selectedTags.indexOf(tagName);
+
+            if (idx === -1) {
+                this.selectedTags.push(tagName);
+            } else {
+                this.selectedTags.splice(idx, 1);
+            }
+        },
         getIcon(icon) {
             return getIconUrl(icon)
         },
@@ -81,7 +132,6 @@ export default {
         },
         showModal(data) {
             this.isModal = true;
-            console.log(data)
             this.selectedActivity = data;
         },
         mergeByMonth() {
@@ -99,16 +149,16 @@ export default {
                         return acc
                     }, [])
                     .map(byMonth => !byMonth ? [] : byMonth)
-                    
 
-                console.log(this.showActivities)
+
+            console.log(this.showActivities)
         },
         async getData() {
             const data = await fetchData("http://localhost:3000/activities/v1", this.curPage, this.pageSize);
-            console.log(data.length, this.pageSize)
+
             if (data.length) {
                 this.activities = [...this.activities, ...data];
-                
+
                 this.mergeByMonth();
 
                 this.isMore = (data.length === this.pageSize);
@@ -137,9 +187,10 @@ div.activities {
     width: 100%;
 }
 
-div.filters {
+div.tags {
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
     gap: 1rem;
 }
 

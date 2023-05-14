@@ -1,5 +1,7 @@
 <template>
-    <div class="tag" :class="{ active }"><img v-if="active" src="../assets/checkmark.svg" width="16">{{title}}</div>
+    <div class="tag" :class="{ active }" @click="$emit('selectTag', title)">
+        <img v-if="active" src="../assets/checkmark.svg" width="16">{{ title }}
+    </div>
 </template>
 
 <style>

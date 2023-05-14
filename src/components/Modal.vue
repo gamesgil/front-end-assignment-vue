@@ -1,13 +1,17 @@
 <template>
-    <div class="modal">
+    <div class="modal" >
         <button class="close" @click="$emit('close')">
             <img src="../assets/close.svg" alt="">
         </button>
-        <img src="../assets/topics/adalovelace.png" width="64">
+        <div>
+            <img class="icon" :src="icon" width="64" :class="{orange: product==='bpjr', turquoise: product!=='bpjr'}">
+            <div class="jr" v-if="product==='bpjr'">Jr.</div>
+        </div>
+        
         <h2>{{ title }}</h2>
         <p>{{ getFormattedDateTime(time) }}</p>
         <p class="left comment"><strong>{{ comment }}</strong></p>
-        <p class="left score">Score: <strong>{{score}}/{{maxScore}}</strong></p>
+        <p class="left score" v-if="score">Score: <strong>{{score}}/{{maxScore}}</strong></p>
     </div>
 </template>
 
@@ -21,7 +25,9 @@ export default {
         time: String,
         comment: String,
         score: String,
-        maxScore: String
+        maxScore: String,
+        product: String,
+        icon: String
     },
     methods: {
         getFormattedDateTime(time) {
@@ -31,7 +37,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .modal {
     display: flex;
     flex-direction: column;

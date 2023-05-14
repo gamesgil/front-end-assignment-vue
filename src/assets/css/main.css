@@ -1,4 +1,36 @@
 :root {
     --secondaryDark: rgb(0, 128, 129);
     --secondaryLight: rgb(237, 253, 253);
+    --orange: rgb(246, 183, 13);
+    --turquoise: rgb(0,204,203);
+}
+
+.secondary-dark {
+    color: var(--secondaryDark);
+}
+
+img.icon {
+    display: block;
+    border-radius: 50%;
+    padding: 0.25rem;
+}
+
+.orange {
+    background: var(--orange);
+}
+
+.turquoise {
+    background: var(--turquoise);
+}
+
+div.jr {
+    position: relative;
+    width: 15px;
+    height: 15px;
+    left: 1rem;
+    top: -0.75rem;
+    border-radius: 50%;
+    background-color: var(--orange);
+    font-size: 0.75rem;
+    margin: 0 auto;
 }

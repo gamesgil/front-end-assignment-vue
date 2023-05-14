@@ -19,13 +19,13 @@
             </div>
             <div class="row" v-if="isMore" @click="loadMore()">
                 <img src="../assets/more.svg" width="16">
-                <span><strong>Load more</strong></span>
+                <span class="secondary-dark"><strong>Load more</strong></span>
             </div>
         </template>
 
         <Modal v-if=selectedActivity @close="selectedActivity = null" :title="selectedActivity.topic_data.name"
             :time="selectedActivity.d_created" :comment="selectedActivity.comment" :score="selectedActivity.score"
-            :maxScore="selectedActivity.possible_score">
+            :maxScore="selectedActivity.possible_score" :product="selectedActivity.product" :icon=getIcon(selectedActivity.topic_data.icon_path)>
         </Modal>
     </div>
 </template>
@@ -38,6 +38,7 @@ import Modal from '@/components/Modal.vue';
 import Search from '@/components/Search.vue';
 import { fetchData } from '../util/parse.util';
 import { getMonth } from '../util/date.util';
+import {getIconUrl} from '../util/file.util';
 
 export default {
     name: 'Activities',
@@ -72,6 +73,9 @@ export default {
         this.getData()
     },
     methods: {
+        getIcon(icon) {
+            return getIconUrl(icon)
+        },
         getMonth(entry) {
             return getMonth(entry.d_created)
         },

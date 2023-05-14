@@ -15,7 +15,8 @@ export function getFormattedDateTime(time) {
         hour: "numeric", minute: "numeric", hour12: true
     };
 
-    const result = `${new Intl.DateTimeFormat("en-US", option1).format(time)} • ${new Intl.DateTimeFormat("en-US", option2).format(dateTime)}`;
+    const result = `${new Intl.DateTimeFormat("en-US", option1).format(time)} • ${new Intl.DateTimeFormat("en-US", option2).format(dateTime)}`
+    .replace('AM', 'am').replace('PM', 'pm');
 
     return result;
 }

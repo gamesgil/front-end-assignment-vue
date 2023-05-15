@@ -52,6 +52,10 @@ export default {
         ActivityList,
         Modal
     },
+    props: {
+        apiVer: Number,
+        transformer: Function
+    },
     data() {
         return {
             tags: [
@@ -106,8 +110,6 @@ export default {
     mounted() {
         this.getData();
         this.selectAll();
-
-
     },
     methods: {
         closeModal() {
@@ -140,7 +142,7 @@ export default {
         showModal(data) {
             this.isModal = true;
             this.selectedActivity = data;
-            router.replace({path: `?id=${data.id}`})
+            router.replace({ path: `?id=${data.id}` })
 
         },
         mergeByMonth() {
@@ -158,25 +160,22 @@ export default {
                         return acc
                     }, [])
                     .map(byMonth => !byMonth ? [] : byMonth)
-
-
-            console.log(this.showActivities)
         },
         async getData() {
-            const data = await fetchData("http://localhost:3000/activities/v1", this.curPage, this.pageSize);
+            const data = await fetchData(`http://localhost:3000/activities/v${this.apiVer}`, this.transformer, this.curPage, this.pageSize);
 
             if (data.length) {
                 if (this.$route.query.id !== undefined) {
                     this.selectedActivity = data.find(activity => activity.id === this.$route.query.id && isZoom(activity.resource_type));
                 }
 
-                this.activities = [...this.activities, ...data];
-
                 data.forEach(activity => {
                     if (!this.filterOptions.includes(activity.topic_data.name)) {
                         this.filterOptions.push(activity.topic_data.name)
                     }
                 });
+
+                this.activities = [...this.activities, ...data];
 
                 this.mergeByMonth();
 

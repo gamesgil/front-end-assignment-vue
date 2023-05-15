@@ -1,22 +1,22 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import Home from '../views/Home.vue';
+import Activities from '../components/Activities';
+import {resTypesToActivities} from '../util/parse.util';
 
 Vue.use(VueRouter);
 
 const routes = [
   {
     path: '/',
-    name: 'home',
-    component: Home,
+    name: 'activities',
+    component: Activities,
+    props: {apiVer: 1}
   },
   {
-    path: '/about',
-    name: 'about',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue'),
+    path: '/alt',
+    name: 'activities-alt',
+    component: Activities,
+    props: {apiVer: 2, transformer: resTypesToActivities}
   },
 ];
 

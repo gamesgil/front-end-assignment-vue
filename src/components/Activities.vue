@@ -1,7 +1,7 @@
 <template>
     <div class="container">
         <h1>Timeline</h1>
-        <Search></Search>
+        <Search :list="filterOptions" @submit="(text) => filter = text"></Search>
         <template>
             <p>Filter by:</p>
             <div class="tags">
@@ -12,10 +12,10 @@
         </template>
 
         <template>
-            <p>{{ showActivities.length }}</p>
             <div class="activities" v-for="(activities, index) in showActivities" v-bind:key="index">
                 <ActivityList v-if="activities.length" :isFirst="index === 0" :month=getMonth(activities[0])
-                    :activities="activities" @showActivity="(data) => showModal(data)">
+                    :activities="activities" :tags="selectedTags" :filter="filter"
+                    @showActivity="(data) => showModal(data)" >
                 </ActivityList>
             </div>
             <div class="row" v-if="isMore" @click="loadMore()">
@@ -100,26 +100,28 @@ export default {
             pageSize: 10,
             isMore: true,
             selectedTags: [],
-            filter: ''
+            filter: '',
+            filterOptions: []
         }
     },
     mounted() {
-        this.getData()
+        this.getData();
+        this.selectAll();
     },
     methods: {
         isTagSelected(title) {
-            console.log(title)
-                console.log(this.selectedTags.includes(title))
-            return this.selectedTags.includes(title)
+            const resourceType = this.tags.find(tag => tag.title === title).resourceType;
+            return this.selectedTags.includes(resourceType)
         },
         selectAll() {
-            this.selectedTags = [...this.tags.map(tag => tag.title)];
+            this.selectedTags = [...this.tags.map(tag => tag.resourceType)];
         },
         selectTag(tagName) {
-            const idx = this.selectedTags.indexOf(tagName);
+            const resourceType = this.tags.find(tag => tag.title === tagName).resourceType;
+            const idx = this.selectedTags.indexOf(resourceType);
 
             if (idx === -1) {
-                this.selectedTags.push(tagName);
+                this.selectedTags.push(resourceType);
             } else {
                 this.selectedTags.splice(idx, 1);
             }
@@ -159,6 +161,12 @@ export default {
             if (data.length) {
                 this.activities = [...this.activities, ...data];
 
+                data.forEach(activity => {
+                    if(!this.filterOptions.includes(activity.topic_data.name)) {
+                        this.filterOptions.push(activity.topic_data.name)
+                    }
+                });
+
                 this.mergeByMonth();
 
                 this.isMore = (data.length === this.pageSize);
@@ -180,7 +188,7 @@ div.container {
     flex-direction: column;
     align-items: flex-start;
     gap: 1rem;
-    width: 50%;
+    width: 75%;
 }
 
 div.activities {

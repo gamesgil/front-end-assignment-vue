@@ -1,14 +1,10 @@
 <template>
     <div class="input">
         <label for="activity"></label>
-        <input type="text" name="activity" placeholder="Search Timeline" @keydown="isTyping=true" />
-        <button type="submit" @click="isTyping=false">Search</button>
+        <input v-model="text" type="text" name="activity" placeholder="Search Timeline" @focus="isTyping = true" />
+        <button type="submit" @click="submit()">Search</button>
         <ul v-if=isTyping>
-            <li>one</li>
-            <li>two</li>
-            <li>two</li>
-            <li>two</li>
-            <li>two</li>
+            <li v-for="item in list" @click="text=item" v-bind:key="item">{{ item }}</li>
         </ul>
     </div>
 </template>
@@ -17,16 +13,19 @@
 export default {
     name: 'Search',
     props: {
+        list: Array
     },
     methods: {
-        alert(x) {
-            console.log('xxx')
+        submit() {
+            this.isTyping=false;
+            this.$emit('submit', this.text);
+            console.log(this.text)
         }
     },
     data() {
         return {
-        isTyping: false
-            
+            text: '',
+            isTyping: false
         }
     }
 }

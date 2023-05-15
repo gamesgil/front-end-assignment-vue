@@ -26,20 +26,8 @@ import {getIconUrl} from '../util/file.util';
 export default {
     name: 'Activity',
     props: {
-        title: String,
         hasZoom: Boolean,
         activity: Object
-    },
-    data() {
-        return {
-            data: {
-                title: 'Gil',
-                date: '12345678',
-                comment: 'ok',
-                score: 1,
-                maxScore: 10
-            }
-        }
     },
     methods: {
         getIcon(icon) {

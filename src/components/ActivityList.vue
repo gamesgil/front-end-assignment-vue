@@ -1,14 +1,14 @@
 <template>
     <div>
+        <p>{{ filter }}</p>
         <div v-if=!isFirst class="separator"></div>
         <Month :title=month></Month>
         <div v-for="(activity, index) in activities" v-bind:key="index">
-
-            <div class="separator"></div>
-            <Activity title="aaa" hasZoom
-                :activity="activity"
-                @showActivity="(data) => $emit('showActivity', data)">
-            </Activity>
+            <div v-if="tags.includes(activity.resource_type) && (activity.topic_data.name.includes(filter) || !filter)">
+                <div class="separator"></div>
+                <Activity hasZoom :activity="activity" @showActivity="(data) => $emit('showActivity', data)">
+                </Activity>
+            </div>
         </div>
     </div>
 </template>
@@ -24,7 +24,9 @@ export default {
     props: {
         isFirst: Boolean,
         month: String,
-        activities: Array
+        activities: Array,
+        tags: Array,
+        filter: String
     },
     components: { Month, Activity },
     methods: {

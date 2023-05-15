@@ -28,3 +28,9 @@ export function regularParser(data) {
     return sorted;
    
 }
+
+export function isZoom(resType) {
+    const defs = ['quiz', 'easy_quiz', 'challenge', 'make_a_map', 'make_a_movie', 'wordplay', 'related_reading', 'draw_about_it']
+
+    return defs.includes(resType);
+}

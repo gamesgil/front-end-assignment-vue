@@ -22,6 +22,7 @@
 <script>
 import {getFormattedDateTime} from '../util/date.util';
 import {getIconUrl} from '../util/file.util';
+import {isZoom} from '../util/parse.util';
 
 export default {
     name: 'Activity',
@@ -34,9 +35,7 @@ export default {
             return getIconUrl(icon)
         },
         isZoom() {
-            const defs = ['quiz', 'easy_quiz', 'challenge', 'make_a_map', 'make_a_movie', 'wordplay', 'related_reading', 'draw_about_it']
-
-            return defs.includes(this.activity.resource_type);
+            return isZoom(this.activity.resource_type)
         },
         getFormattedDateTime(time) {
             return getFormattedDateTime(time);

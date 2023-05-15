@@ -1,11 +1,12 @@
 <template>
     <div class="container">
         <h1>Timeline</h1>
+        <p>{{ $route.params }}</p>
         <Search :list="filterOptions" @submit="(text) => filter = text"></Search>
         <template>
             <p>Filter by:</p>
             <div class="tags">
-                <Tag :active="selectedTags.length===tags.length" title="All Work" @selectTag="selectAll()"></Tag>
+                <Tag :active="selectedTags.length === tags.length" title="All Work" @selectTag="selectAll()"></Tag>
                 <Tag :active=isTagSelected(title) :title=title v-for="{ title } in tags" v-bind:key="title"
                     @selectTag="(title) => selectTag(title)"></Tag>
             </div>
@@ -15,7 +16,7 @@
             <div class="activities" v-for="(activities, index) in showActivities" v-bind:key="index">
                 <ActivityList v-if="activities.length" :isFirst="index === 0" :month=getMonth(activities[0])
                     :activities="activities" :tags="selectedTags" :filter="filter"
-                    @showActivity="(data) => showModal(data)" >
+                    @showActivity="(data) => showModal(data)">
                 </ActivityList>
             </div>
             <div class="row" v-if="isMore" @click="loadMore()">
@@ -24,7 +25,7 @@
             </div>
         </template>
 
-        <Modal v-if=selectedActivity @close="selectedActivity = null" :title="selectedActivity.topic_data.name"
+        <Modal v-if=selectedActivity @close="closeModal()" :title="selectedActivity.topic_data.name"
             :time="selectedActivity.d_created" :comment="selectedActivity.comment" :score="selectedActivity.score"
             :maxScore="selectedActivity.possible_score" :product="selectedActivity.product"
             :icon=getIcon(selectedActivity.topic_data.icon_path)>
@@ -38,15 +39,13 @@ import Tag from '@/components/Tag.vue';
 import ActivityList from '@/components/ActivityList.vue';
 import Modal from '@/components/Modal.vue';
 import Search from '@/components/Search.vue';
-import { fetchData } from '../util/parse.util';
+import { fetchData, isZoom } from '../util/parse.util';
 import { getMonth } from '../util/date.util';
 import { getIconUrl } from '../util/file.util';
+import router from '../router';
 
 export default {
     name: 'Activities',
-    props: {
-        msg: String,
-    },
     components: {
         Search,
         Tag,
@@ -107,8 +106,14 @@ export default {
     mounted() {
         this.getData();
         this.selectAll();
+
+
     },
     methods: {
+        closeModal() {
+            this.selectedActivity = null;
+            router.replace('');
+        },
         isTagSelected(title) {
             const resourceType = this.tags.find(tag => tag.title === title).resourceType;
             return this.selectedTags.includes(resourceType)
@@ -135,6 +140,8 @@ export default {
         showModal(data) {
             this.isModal = true;
             this.selectedActivity = data;
+            router.replace({path: `?id=${data.id}`})
+
         },
         mergeByMonth() {
             this.showActivities =
@@ -159,10 +166,14 @@ export default {
             const data = await fetchData("http://localhost:3000/activities/v1", this.curPage, this.pageSize);
 
             if (data.length) {
+                if (this.$route.query.id !== undefined) {
+                    this.selectedActivity = data.find(activity => activity.id === this.$route.query.id && isZoom(activity.resource_type));
+                }
+
                 this.activities = [...this.activities, ...data];
 
                 data.forEach(activity => {
-                    if(!this.filterOptions.includes(activity.topic_data.name)) {
+                    if (!this.filterOptions.includes(activity.topic_data.name)) {
                         this.filterOptions.push(activity.topic_data.name)
                     }
                 });
@@ -182,13 +193,14 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 div.container {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     gap: 1rem;
     width: 75%;
+    margin-bottom: 5rem;
 }
 
 div.activities {
@@ -204,5 +216,7 @@ div.tags {
 
 div.row {
     display: flex;
+    margin: 0 auto;
+    cursor: pointer;
 }
 </style>

@@ -1,12 +1,14 @@
 <template>
     <div>
-        <p>{{ filter }}</p>
         <div v-if=!isFirst class="separator"></div>
         <Month :title=month></Month>
         <div v-for="(activity, index) in activities" v-bind:key="index">
             <div v-if="tags.includes(activity.resource_type) && (activity.topic_data.name.includes(filter) || !filter)">
                 <div class="separator"></div>
-                <Activity hasZoom :activity="activity" @showActivity="(data) => $emit('showActivity', data)">
+                <Activity hasZoom :activity="activity" :isVisible="!isHidden(index)"
+                @showActivity="(data) => $emit('showActivity', data)"
+                @changeVisibility="() => changeVisibility(index)"
+                >
                 </Activity>
             </div>
         </div>
@@ -29,8 +31,24 @@ export default {
         filter: String
     },
     components: { Month, Activity },
+    data() {
+        return {
+            hiddenList: []
+        }
+    },
     methods: {
+        changeVisibility(idx) {
+            const pos = this.hiddenList.indexOf(idx);
 
+            if (pos === -1) {
+                this.hiddenList = [...this.hiddenList, idx];
+            } else {
+                this.hiddenList.splice(pos, 1);
+            }
+        },
+        isHidden(idx) {
+            return this.hiddenList.indexOf(idx) > -1;
+        }
     }
 }
 

@@ -1,9 +1,13 @@
 <template>
     <div class="activity" :class="{ 'has-zoom': hasZoom }">
-        <div class="container">
+        <button @click="$emit('changeVisibility')">
+            <img class="view" src="../assets/eye.svg" width="16">
+            <p>{{ isVisible }}</p>
+        </button>
+        <div class="container" :class="{ hidden: !isVisible }">
             <div>
-                <img class="icon" :class="{orange: activity.product==='bpjr', turquoise: activity.product!=='bpjr'}"
-                :src=getIcon(activity.topic_data.icon_path) width="32">
+                <img class="icon" :class="{ orange: activity.product === 'bpjr', turquoise: activity.product !== 'bpjr' }"
+                    :src=getIcon(activity.topic_data.icon_path) width="32">
                 <div class="jr" v-if="activity.product === 'bpjr'">Jr.</div>
             </div>
             <div class="info">
@@ -11,7 +15,7 @@
                 <p>{{ getFormattedDateTime(activity.d_created) }}</p>
             </div>
             <span v-if="activity.score">Score: <strong>{{ activity.score }}/{{ activity.possible_score }}</strong></span>
-            <div class="view-work" v-if="isZoom()"  @click="$emit('showActivity', activity)">
+            <div class="view-work" v-if="isZoom()" @click="$emit('showActivity', activity)">
                 <img src="../assets/eye.svg" width="16">
                 <span><strong>View work</strong></span>
             </div>
@@ -20,15 +24,16 @@
 </template>
 
 <script>
-import {getFormattedDateTime} from '../util/date.util';
-import {getIconUrl} from '../util/file.util';
-import {isZoom} from '../util/parse.util';
+import { getFormattedDateTime } from '../util/date.util';
+import { getIconUrl } from '../util/file.util';
+import { isZoom } from '../util/parse.util';
 
 export default {
     name: 'Activity',
     props: {
         hasZoom: Boolean,
-        activity: Object
+        activity: Object,
+        isVisible: Boolean
     },
     methods: {
         getIcon(icon) {
@@ -78,4 +83,14 @@ div.view-work>img {
     margin-right: 0.5rem;
 }
 
+div.hidden {
+    visibility: hidden;
+}
+
+button {
+    display: block;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
 </style>

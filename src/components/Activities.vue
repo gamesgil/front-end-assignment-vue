@@ -1,7 +1,6 @@
 <template>
     <div class="container">
         <h1>Timeline</h1>
-        <p>{{ $route.params }}</p>
         <Search :list="filterOptions" @submit="(text) => filter = text"></Search>
         <template>
             <p>Filter by:</p>
